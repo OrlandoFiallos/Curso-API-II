@@ -43,7 +43,18 @@ def category_detail(request, pk):
 @api_view(['GET','POST'])
 def menu_item_list(request):
     if request.method == 'GET':
-        items = MenuItem.objects.all()
+        items = MenuItem.objects.select_related('category').all()
+        category_name = request.query_params.get('category')
+        price_filter = request.query_params.get('price')
+        search = request.query_params.get('search')
+        
+        if category_name:
+            items = items.filter(category__title=category_name)
+        if price_filter:
+            items = items.filter(price__lte=price_filter)
+        if search:
+            items = items.filter(title__icontains=search)
+            
         serializer = MenuItemSerializer(items,many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
