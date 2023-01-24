@@ -5,9 +5,10 @@ from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 import bleach
 
 class CategorySerializer(serializers.ModelSerializer):
-    def validate_title(self,value):
-        return bleach.clean(value)
-        
+    # def validate_title(self,value):
+    #     return bleach.clean(value)
+    def validate(self, attrs):
+        attrs['title'] = bleach.clean(attrs['title'])    
     class Meta:
         model = Category
         fields = '__all__'
