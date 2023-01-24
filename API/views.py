@@ -56,7 +56,8 @@ def menu_item_list(request):
         if search:
             items = items.filter(title__icontains=search)
         if ordering:
-            items = items.order_by(ordering)
+            ordering_fields = ordering.split(',')
+            items = items.order_by(*ordering_fields)
         serializer = MenuItemSerializer(items,many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
