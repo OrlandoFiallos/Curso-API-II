@@ -2,8 +2,12 @@ from rest_framework import serializers
 from .models import Category, MenuItem
 from decimal import Decimal
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
+import bleach
 
 class CategorySerializer(serializers.ModelSerializer):
+    def validate_title(self,value):
+        return bleach.clean(value)
+        
     class Meta:
         model = Category
         fields = '__all__'
