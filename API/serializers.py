@@ -1,6 +1,7 @@
 from rest_framework import serializers 
 from .models import Category, MenuItem
 from decimal import Decimal
+from rest_framework.validators import UniqueValidator 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,14 +29,13 @@ class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
         fields = ['id','title','price','inventory', 'price_after_tax','category','category_id']
-        # extra_kwargs = {
-        #     'price':{
-        #         'min_value':2
-        #     },
-        #     'stock':{
-        #         'source':'inventory','min_value':0
-        #     }
-        # }
+        extra_kwargs = {
+            'title':{
+                'validators':[
+                    UniqueValidator(queryset=MenuItem.objects.all())
+                ]
+            }
+        }
 
     def calculate_tax(self, product:MenuItem):
         return product.price * Decimal(1.1)
