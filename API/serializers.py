@@ -8,19 +8,26 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MenuItemSerializer(serializers.ModelSerializer):
-    stock = serializers.IntegerField(source='inventory')
+    # stock = serializers.IntegerField(source='inventory')
     price_after_tax = serializers.SerializerMethodField(method_name='calculate_tax')
     price = serializers.DecimalField(max_digits=6, decimal_places=2)
     category_id = serializers.IntegerField(write_only=True)
     category = CategorySerializer(read_only=True)
     
-    def validate_price(self, value):
-        if (value < 2):
+    # def validate_price(self, value):
+    #     if (value < 2):
+    #         raise serializers.ValidationError('Price should not be less than 2.0')
+    
+    def validate(self, attrs):
+        if(attrs['price']<2):
             raise serializers.ValidationError('Price should not be less than 2.0')
+        if attrs['inventory'<0]:
+            raise serializers.ValidationError('Stock cannot be negative')
+        return super().validate(attrs)
 
     class Meta:
         model = MenuItem
-        fields = ['id','title','price','stock', 'price_after_tax','category','category_id']
+        fields = ['id','title','price','inventory', 'price_after_tax','category','category_id']
         # extra_kwargs = {
         #     'price':{
         #         'min_value':2
