@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view 
 from rest_framework import status
 from .models import Category, MenuItem
+from django.core.paginator import Paginator, EmptyPage
 
 #Categorías
 @api_view(['GET','POST'])
@@ -48,6 +49,8 @@ def menu_item_list(request):
         price_filter = request.query_params.get('price')
         search = request.query_params.get('search')
         ordering = request.query_params.get('ordering')
+        perpage = request.query_params.get('perpage',default=2)
+        page = request.query_params.get('page', default=1)
         
         if category_name:
             items = items.filter(category__title=category_name)
@@ -58,6 +61,12 @@ def menu_item_list(request):
         if ordering:
             ordering_fields = ordering.split(',')
             items = items.order_by(*ordering_fields)
+        
+        paginator = Paginator(items,per_page=perpage)
+        try:
+            items = paginator.page(number=page)
+        except EmptyPage:
+            items = []
         serializer = MenuItemSerializer(items,many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
