@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from .models import Category, MenuItem
+from .models import Category, MenuItem, Watches, WatchesCategory
 from decimal import Decimal
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 import bleach
@@ -50,3 +50,14 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
     def calculate_tax(self, product:MenuItem):
         return product.price * Decimal(1.1)
+
+#modelo Watches
+class WatchesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Watches
+        fields = '__all__'
+
+class WatchesCategory(serializers.ModelSerializer):
+    class Meta:
+        model = WatchesCategory
+        fields = '__all__'
