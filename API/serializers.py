@@ -52,12 +52,13 @@ class MenuItemSerializer(serializers.ModelSerializer):
         return product.price * Decimal(1.1)
 
 #modelo Watches
-class WatchesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Watches
-        fields = '__all__'
 
-class WatchesCategory(serializers.ModelSerializer):
+class WatchesCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = WatchesCategory
         fields = '__all__'
+class WatchesSerializer(serializers.ModelSerializer):
+    category = WatchesCategorySerializer(read_only=True)
+    class Meta:
+        model = Watches
+        fields = ['id','title','price','inventory','category']

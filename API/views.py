@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from .serializers import CategorySerializer, MenuItemSerializer
+from .serializers import CategorySerializer, MenuItemSerializer,WatchesSerializer
 from rest_framework.response import Response 
 from rest_framework.decorators import api_view 
 from rest_framework import status
-from .models import Category, MenuItem
+from .models import Category, MenuItem, Watches, WatchesCategory 
 from django.core.paginator import Paginator, EmptyPage
+from rest_framework import viewsets
+
 
 #Categorías
 @api_view(['GET','POST'])
@@ -94,3 +96,9 @@ def menu_item_detail(request, pk):
     elif request.method == 'DELETE':
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class WatchesViewSet(viewsets.ModelViewSet):
+    queryset = Watches.objects.all()
+    serializer_class = WatchesSerializer
+    ordering_fields=['price','inventory']
+    search_fields=['title','category__title']
