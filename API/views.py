@@ -101,12 +101,18 @@ def menu_item_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class WatchesViewSet(viewsets.ModelViewSet):
-    throttle_classes = [AnonRateThrottle, TenCallsPerMinute]
+    # throttle_classes = [AnonRateThrottle, TenCallsPerMinute]
     queryset = Watches.objects.all()
     serializer_class = WatchesSerializer
     ordering_fields=['price','inventory']
     search_fields=['title','category__title']
     
+    def get_throttles(self):
+        if self.action == 'create':
+            throttle_classes = [UserRateThrottle]
+        else:
+            throttle_classes = []
+        return [throttle for throttle in throttle_classes]
 @api_view()
 @permission_classes([IsAuthenticated])
 def secret(request):
