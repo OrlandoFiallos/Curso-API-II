@@ -7,7 +7,7 @@ from .models import Category, MenuItem, Watches, WatchesCategory
 from django.core.paginator import Paginator, EmptyPage
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated 
-from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle 
 
 
 #Categorías
@@ -121,3 +121,9 @@ def manager_view(request):
 @throttle_classes([AnonRateThrottle])
 def throttle_check(request):
     return Response({'message':'succesfull'})
+
+@api_view()
+@permission_classes([IsAuthenticated])
+@throttle_classes([UserRateThrottle])
+def throttle_check_auth(request):
+    return Response({'message':'Message for the logged in users only'})
