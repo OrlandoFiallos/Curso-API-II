@@ -6,5 +6,6 @@ urlpatterns = [
     path('menu-items/',views.menu_item_list),
     path('menu-items/<int:pk>',views.menu_item_detail),
     path('watches', views.WatchesViewSet.as_view({'get':'list'}),),
-    path('watches/<int:pk>',views.WatchesViewSet.as_view({'get':'retrieve'}))
+    path('watches/<int:pk>',views.WatchesViewSet.as_view({'get':'retrieve'})),
+    path('secret/',views.secret)
 ]
