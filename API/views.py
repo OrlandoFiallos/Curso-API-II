@@ -8,6 +8,7 @@ from django.core.paginator import Paginator, EmptyPage
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated 
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle 
+from .throttles import TenCallsPerMinute
 
 
 #Categorías
@@ -124,6 +125,6 @@ def throttle_check(request):
 
 @api_view()
 @permission_classes([IsAuthenticated])
-@throttle_classes([UserRateThrottle])
+@throttle_classes([TenCallsPerMinute])
 def throttle_check_auth(request):
     return Response({'message':'Message for the logged in users only'})
