@@ -109,3 +109,10 @@ class WatchesViewSet(viewsets.ModelViewSet):
 @permission_classes([IsAuthenticated])
 def secret(request):
     return Response({'message':'Some secret message'})
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def manager_view(request):
+    if request.user.groups.filter(name='Manager').exists():
+        return Response({'message':'Only Manager should see this'})
+    return Response({'message':'You are not authorized'}, status=status.HTTP_401_UNAUTHORIZED)

@@ -11,4 +11,5 @@ urlpatterns = [
     path('watches/<int:pk>',views.WatchesViewSet.as_view({'get':'retrieve'})),
     path('secret/',views.secret),
     path('api-token-auth',obtain_auth_token),#solo acepta POST
+    path('manager-view/', views.manager_view),
 ]
