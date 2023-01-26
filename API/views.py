@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from .serializers import CategorySerializer, MenuItemSerializer,WatchesSerializer
 from rest_framework.response import Response 
-from rest_framework.decorators import api_view 
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework import status
 from .models import Category, MenuItem, Watches, WatchesCategory 
 from django.core.paginator import Paginator, EmptyPage
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated 
-from rest_framework.decorators import permission_classes
+from rest_framework.throttling import AnonRateThrottle
 
 
 #Categorías
@@ -116,3 +116,8 @@ def manager_view(request):
     if request.user.groups.filter(name='Manager').exists():
         return Response({'message':'Only Manager should see this'})
     return Response({'message':'You are not authorized'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view()
+@throttle_classes([AnonRateThrottle])
+def throttle_check(request):
+    return Response({'message':'succesfull'})
