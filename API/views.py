@@ -101,6 +101,7 @@ def menu_item_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class WatchesViewSet(viewsets.ModelViewSet):
+    throttle_classes = [AnonRateThrottle, TenCallsPerMinute]
     queryset = Watches.objects.all()
     serializer_class = WatchesSerializer
     ordering_fields=['price','inventory']
